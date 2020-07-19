@@ -1,0 +1,30 @@
+Title: 
+  Clean up - Mothers -  Latent Class Analysis.
+Data:
+  File is lca1.dat;
+Variable:
+  Names are id,item1,item2,item3,item4,item5,item6,
+  item7,item8,item9,item10,item11,item12,item13,item14
+  usevariables = item1,item2,item3,item5,item6,item8,item9,item11,item12,item14
+  continuous   = item1,item2,item3,item5,item6,item8,item9,item11,item12,item14
+  classes = c(3);
+Analysis: 
+  Type=mixture;
+Plot:
+  type is plot3;
+  series is item1 (Independent clean up),
+  item2 (Control),
+  item3 (Autonomy Support),
+  item5 (Hostility),
+  item6 (Affection),
+  item8 (Construction),
+  item9 (Inadequate boundaries setting),
+  item11 (Feedback),
+  item12 (Concern),
+  item14 (Affect);
+Savedata:
+  file is lca1_save.txt;
+  save is cprob;
+  format is free;
+output:
+  tech11 tech14;
