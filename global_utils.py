@@ -12,6 +12,106 @@ import fileinput
 import pathlib
 
 
+def countCodingToTurn(jsonObj, rowObj, matrix_input):
+    currBehavior = jsonObj["Code"]
+    if not currBehavior in rowObj:
+        rowObj[currBehavior] = 0
+    rowObj[currBehavior] = rowObj[currBehavior] + 1
+    return rowObj
+
+
+def createFrequencyDf(jsonsDir):
+
+    matrix_input = pd.DataFrame()
+    matrix_input = operateOnJsonFilesForMatrix(addRowToDfPerFileWithOccurenceNumber, 'addRowToDfPerFileWithOccurenceNumber',
+                                               jsonsDir, countCodingToTurn, matrix_input)
+
+    # print("matrix_input: ")
+    # print(matrix_input)
+    matrix_input.to_csv(jsonsDir+'/behaviorFrequency.csv', index=False)
+
+    return matrix_input
+
+
+def addRowToDfPerFileWithOccurenceNumber(filename, dir, turnOperation, *args):
+    # print('addRowToDfPerFileWithOccurenceNumber')
+    # print('filename = '+filename)
+    # print('dir = '+dir)
+    args = list(args)
+    matrix_input = args[0]
+
+    if filename.endswith(".json"):
+        jsonFile = open(dir + '\\' + filename)
+        subjectsTurns = json.load(jsonFile)
+        subjectsRecord = {}
+        subjectName = filename.replace('.json', '')
+        subjectsRecord['subjects'] = subjectName
+        for turn in subjectsTurns:
+            subjectsRecord = turnOperation(
+                turn, subjectsRecord, matrix_input)
+        result = matrix_input.append(subjectsRecord, ignore_index=True)
+        return result
+    else:
+        return
+
+
+def convertToFrequencyRatio(matrix_input, dir, outputdir, outputFileName, divideCurrentRowOfSubjects):
+    print('convertToFrequencyRatioPosNegBehaviours')
+    directory = os.fsencode(dir)
+    i = 0
+    filenames = []
+    for file in os.listdir(directory):
+
+        filename = os.fsdecode(file)
+        if filename.endswith(".json"):
+            subjectCode = filename.replace('.json', '')
+            filenames.append(subjectCode)
+            print('operating on ' + filename)
+            jsonFile = open(dir + filename)
+            jsonObjectsArr = json.load(jsonFile)
+            mother_dict = [
+                x for x in jsonObjectsArr if x['Subject'] == 'mother']
+            motherTurnsCount = len(mother_dict)
+
+            child_dict = [x for x in jsonObjectsArr if x['Subject'] == 'child']
+            childTurnsCount = len(child_dict)
+            # print("matrix_input before loop="+str(matrix_input))
+            matrix_input = udateCountsPerBehavior(
+                matrix_input, motherTurnsCount, childTurnsCount, i, divideCurrentRowOfSubjects)
+            i = i+1
+
+        else:
+            continue
+
+    matrix_input.to_csv(outputdir +
+                        outputFileName, index=False)
+    print('file '+outputFileName+' was written with calculated matrix')
+
+    return matrix_input
+
+
+def udateCountsPerBehavior(matrix_input, motherTurnsCount, childTurnsCount, subjectsRow, divideCurrentRowOfSubjects):
+    print("udateCountsPerBehaviorWithModifiersRow")
+    legend = convertLegendCsvToJson()
+    # print(keysB)
+    # for bKey in keysB:
+   # print("len(keysB)="+str(len(keysB)))
+    for i in range(len(matrix_input.columns)):
+        # for i in range(1):
+        currentBehavior = matrix_input.columns[i]
+        # print("Checking " + bKey + " i="+str(i) + " motherTurnsCount=" +
+        #       str(motherTurnsCount) + " childTurnsCount=" + str(childTurnsCount))
+        if (currentBehavior != "subjects"):
+            try:
+                matrix_input = divideCurrentRowOfSubjects(
+                    currentBehavior, legend, matrix_input, motherTurnsCount, childTurnsCount, subjectsRow)
+            except Exception as e:
+                print(e)
+                return
+    # print("matrix_input AFTER="+str(matrix_input))
+    return matrix_input
+
+
 def getLegend():
     folderRelativePath = 'py/'
     legendFile = str(pathlib.Path(
@@ -175,7 +275,7 @@ def getKeyForValue(json, lookupValue):
 def setCodeEntry(jFile, srcPath):
     filename = os.fsdecode(jFile)
 
-    jsonFile = open(targetJsonPath + filename, 'r')
+    jsonFile = open(srcPath + filename, 'r')
     jsonObjectsArr = json.load(jsonFile)
     for jsonObj in jsonObjectsArr:
         jsonObj = setCodeEntryForObj(jsonObj)
@@ -250,14 +350,14 @@ def replaceComma(jsonFile, targetJsonPath, *args):
             print(line.replace("'", '"'), end='')
 
 
-def operateOnJsonFile(filename, dir, jsonObjectOperation, *args):
-    print('operateOnJsonFile')
-    print('filename = '+filename)
-    jsonFile = open(dir + filename)
-    jsonObjectsArr = json.load(jsonFile)
-    for jsonObj in jsonObjectsArr:
-        jsonObj = jsonObjectOperation(filename, jsonObj, *args)
-    return
+# def operateOnJsonFile(filename, dir, jsonObjectOperation, *args):
+#     print('operateOnJsonFile')
+#     print('filename = '+filename)
+#     jsonFile = open(dir + filename)
+#     jsonObjectsArr = json.load(jsonFile)
+#     for jsonObj in jsonObjectsArr:
+#         jsonObj = jsonObjectOperation(filename, jsonObj, *args)
+#     return
 
 
 def operateOnJsonFiles(fileOperation, operationName, dir, jsonObjectOperation, *args):

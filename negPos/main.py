@@ -1,6 +1,5 @@
 from py import global_utils
-from py.negPos.utils import setBehaviorAndEmotionEntry
-from py.negPos.cor_mat import createFrequencyDfForNegPosCoding, convertToFrequencyRatioPosNegBehaviours
+from py.negPos.utils import setBehaviorAndEmotionEntry, setBehaviorAndEmotionEntryForObj, divideCurrentRowOfSubjects
 import pathlib
 import sys
 import os
@@ -18,17 +17,18 @@ def main():
 
     outputPath = global_utils.getDeocdedDir(outputDir)
 
-    # global_utils.operateOnJsonFiles(
-    #     global_utils.replaceComma, 'replaceComma', jsonsPath, '')
-    # global_utils.operateOnJsonFiles(setBehaviorAndEmotionEntry,
-    #                                 "setBehaviorAndEmotionEntry", jsonsPath,  '')
-    # global_utils.operateOnJsonFiles(
-    #     global_utils.replaceComma, 'replaceComma', jsonsPath, '')
+    global_utils.operateOnJsonFiles(
+        global_utils.replaceComma, 'replaceComma', jsonsPath, '')
+    global_utils.operateOnJsonFiles(setBehaviorAndEmotionEntry,
+                                    "setCodeEntry", jsonsPath, setBehaviorAndEmotionEntryForObj)
+    global_utils.operateOnJsonFiles(
+        global_utils.replaceComma, 'replaceComma', jsonsPath, '')
 
-    mat = createFrequencyDfForNegPosCoding(jsonsDir)
+    mat = global_utils.createFrequencyDf(jsonsDir)
     print(mat)
     print(len(mat))
-    mat = convertToFrequencyRatioPosNegBehaviours(mat, jsonsPath, outputPath)
+    mat = global_utils.convertToFrequencyRatio(
+        mat, jsonsPath, outputPath, 'negPosFrequency.csv', divideCurrentRowOfSubjects)
 
 
 main()

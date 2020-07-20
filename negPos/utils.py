@@ -9,6 +9,7 @@ from operator import itemgetter
 import os
 import fileinput
 from py import global_utils
+import math
 
 
 class BehaviorsEmotions(enum.Enum):
@@ -28,8 +29,11 @@ def setBehaviorAndEmotionEntry(jFile, srcPath, *args):
     jsonFile = open(directory + filename, 'r')
     currentInteraction = json.load(jsonFile)
     result = []
+    args = list(args)
+    turnOperation = args[0]
+
     for interactionTurn in currentInteraction:
-        interactionTurn = setBehaviorAndEmotionEntryForObj(interactionTurn)
+        interactionTurn = turnOperation(interactionTurn)
     strArr = str(currentInteraction)
     strArr = strArr.replace("'", '"')
     jsonFile = open(srcPath + filename, 'w')
@@ -63,6 +67,18 @@ def setBehaviorAndEmotionEntryForObj(interactionTurn):
               (lookupValue) + '" on column ' + legendColumnX)
 
     return interactionTurn
+
+
+def divideCurrentRowOfSubjects(bKey, legend, matrix_input, motherTurnsCount, childTurnsCount, rowNum):
+
+    # only mothers.
+    curr = matrix_input.loc[rowNum, bKey]
+    if (math.isnan(curr)):
+        newCalc = 0
+    else:
+        newCalc = (matrix_input.loc[rowNum, bKey])/motherTurnsCount
+    matrix_input.loc[rowNum, bKey] = newCalc
+    return matrix_input
 
 
 def getBehaviorEmotionCodingFromBehaviorCategoryAndModifiers(behaviorCategory, mod1, mod2, mod3):

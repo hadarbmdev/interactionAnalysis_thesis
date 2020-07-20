@@ -1,0 +1,36 @@
+Sub Sample()
+    Dim wb1 As Workbook, wb2 As Workbook
+    Dim ws1 As Worksheet
+    Dim sFileName As String
+    
+     With Application
+        .DisplayAlerts = False
+        .AskToUpdateLinks = False
+        .DisplayAlerts = True
+    
+    
+    
+        sFileName = "C:\temp\gal3\011_liya.xlsx"
+    
+        Set legendWb = ActiveWorkbook
+        Set legendWs = legendWb.Sheets("Legend")
+    
+        Set targetWb = Workbooks.Open(sFileName)
+        Application.DisplayAlerts = False
+        Application.AskToUpdateLinks = False
+        Application.DisplayAlerts = True
+        
+        ActiveWindow.Visible = False
+        Debug.Print ("Starting copying Legend into " + sFileName)
+        targetWb.Sheets.Add Before:=targetWb.Sheets(1)
+        targetWb.Sheets(1).Name = "Legend"
+        'legendWs.Cells.Copy targetWb.Sheets("Legend").Cells
+        
+        'Windows(wb2.Name).Visible = True
+        targetWb.Close SaveChanges:=True
+        Debug.Print ("Finished copying Legend into " + sFileName)
+        Set legendWb = Nothing
+        Set targetWb = Nothing
+    End With
+End Sub
+
