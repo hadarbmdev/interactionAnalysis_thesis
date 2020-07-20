@@ -14,7 +14,7 @@ def main():
 
         for vars in vars_permutations:
             iter = iter + 1
-            time.sleep(2)
+            time.sleep(3)
             print(str(iter) + ' :running mplus on vars: '+str(vars))
             try:
                 prepareInputFile(vars)
