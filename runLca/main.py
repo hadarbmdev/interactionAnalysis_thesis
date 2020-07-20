@@ -18,14 +18,14 @@ def main():
             print(str(iter) + ' :running mplus on vars: '+str(vars))
             try:
                 prepareInputFile(vars)
-                runMplus()
+                runMplus(vars)
                 analyzeOutput(iter)
                 print('done iteration '+str(iter))
             except Exception as e:
-                error += ('\n failed vars' + str(vars))
-                error += ('\n' + str(e))
                 text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
-                n = text_file.write(error)
+                error = text_file.read()
+                n = text_file.write(
+                    "failed vars: "+str(vars)+"\n"+error+"\n"+e)
                 text_file.close()
 
 

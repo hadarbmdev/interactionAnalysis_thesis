@@ -28,18 +28,24 @@ def prepareInputFile(vars):
     text_file.close()
 
 
-def runMplus():
+def runMplus(vars):
     FNULL = open(os.devnull, 'w')
     filename = "C:\\TEMP\\mplus\\current.inp"
     fileDir = "C:\\TEMP\\mplus\\"
     args = "C:\\TEMP\\mplus\\Mplus " + filename + " " + fileDir
-    #subprocess.call(args, stdout=FNULL, stderr=FNULL, shell=False)
-
-    stream = os.popen(args)
-    output = stream.read()
-    text_file = open("C:\\TEMP\\mplus\\current.out", "w")
-    n = text_file.write(output)
-    text_file.close()
+    # subprocess.call(args, stdout=FNULL, stderr=FNULL, shell=False)
+    try:
+        stream = os.popen(args)
+        output = stream.read()
+        text_file = open("C:\\TEMP\\mplus\\current.out", "w")
+        n = text_file.write(output)
+        text_file.close()
+    except Exception as e:
+        text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
+        error = text_file.read()
+        n = text_file.write(
+            "failed vars: "+str(vars)+"\n"+error+"\n"+e)
+        text_file.close()
 
 
 def analyzeOutput(iter):
