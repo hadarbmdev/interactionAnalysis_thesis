@@ -5,8 +5,8 @@ import shutil
 import itertools
 
 
-behaviors = {"child_neutral_affect", "cleanup_not_requested", "mother_positive_affect", "no_child_independent_clean_up", "v_direct_concrete_inst", "p_touching_toys_for_cleanup", "v_small_mission_steps", "no_compliance_Passive", "p_signal_const", "yes_compliance", "v_positive_feedback", "p_positive_feedback", "v_signal_const", "v_perspective_mirroring", "p_mother_cleanup", "v_concern", "p_concern_exp", "child_positive_affect", "v_choice", "p_gentle_touch_for_clean_up", "v_rational", "p_affection_expression", "v_motivation_arousal", "v_unclear",
-             "v_inadequate_perspective_invalidation", "v_action_oriented_feedback", "v_affection", "v_hostility", "no_compliance_Defiance", "p_modeling", "v_modeling", "p_forceful_touch_for_cleanup", "child_negative_affect", "no_compliance_Refusal", "child_alert", "no_inadequate_boundaries_setting", "indecisive_expectations_setting", "legitimazinig_expectation_violation", "v_glorificaion_feedback", "v_neg_cr", "yes_child_independent_clean_up", "v_threat_punishment", "p_motivational_arrousal", "child_tired", "v_material_reward", "v_negative_feedback", "unclear_compliance"}
+behaviors = {"child_neutral_affect", "cleanup_not_requested", "mother_positive_affect", "no_child_independent_clean_up", "v_direct_concrete_inst", "p_touching_toys_for_cleanup", "v_small_mission_steps", "no_compliance_Passive", "p_signal_const", "yes_compliance", "v_positive_feedback", "p_positive_feedback", "v_signal_const", "v_perspective_mirroring", "p_mother_cleanup", "v_concern", "p_concern_exp", "child_positive_affect", "v_choice", "p_gentle_touch_for_clean_up", "v_rational", "p_affection_expression", "v_motivation_arousal",
+             "v_inadequate_perspective_invalidation", "v_action_oriented_feedback", "v_affection", "v_hostility", "no_compliance_Defiance", "p_modeling", "v_modeling", "p_forceful_touch_for_cleanup", "child_negative_affect", "no_compliance_Refusal", "child_alert", "indecisive_expectations_setting", "legitimazinig_expectation_violation", "v_glorificaion_feedback", "v_neg_cr", "yes_child_independent_clean_up", "v_threat_punishment", "p_motivational_arrousal", "child_tired", "v_material_reward", "v_negative_feedback"}
 
 behaviors1 = {"child_neutral_affect",
               "cleanup_not_requested", "mother_positive_affect"}
@@ -78,7 +78,8 @@ def getLatentClassProbs(tableRow, iter, filename='C:\\TEMP\\mplus\\current.out',
 
 def keepOutput(maxClassRatio, minClassRatio, iter):
 
-    if ((maxClassRatio < 86) or (minClassRatio > 10)):
+    # if ((maxClassRatio < 86) or (minClassRatio > 10)):
+    if (minClassRatio > 15):
         original = 'C:\\TEMP\\mplus\\current.out'
         target = 'C:\\TEMP\\mplus\\\savedOutputs\\current'+str(iter)+'.out'
         print('current'+str(iter)+'.out was saved')
