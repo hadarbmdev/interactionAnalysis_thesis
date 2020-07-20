@@ -1,0 +1,476 @@
+Mplus VERSION 8
+MUTHEN & MUTHEN
+07/19/2020   8:19 PM
+
+INPUT INSTRUCTIONS
+
+
+      Title:
+        Mothers -  LCA by specific Behavior
+      Data:
+        File is Gelem.dat;
+      Variable:
+        Names are
+      subjectCode,child_neutral_affect,cleanup_not_requested,
+  		mother_positive_affect,no_child_independent_clean_up,
+  		v_direct_concrete_inst,
+  		p_touching_toys_for_cleanup,
+  		v_small_mission_steps,no_compliance_Passive,
+  		p_signal_const,yes_compliance,v_positive_feedback,
+  		p_positive_feedback,v_signal_const,v_perspective_mirroring,
+  		p_mother_cleanup,v_concern,p_concern_exp,child_positive_affect,
+  		v_choice,p_gentle_touch_for_clean_up,v_rational,
+  		p_affection_expression,v_motivation_arousal,v_unclear,
+  		v_inadequate_perspective_invalidation,v_action_oriented_feedback,
+  		v_affection,v_hostility,no_compliance_Defiance,p_modeling,v_modeling,
+  		p_forceful_touch_for_cleanup,child_negative_affect,no_compliance_Refusal,
+  		child_alert,no_inadequate_boundaries_setting,indecisive_expectations_setting,
+  		legitimazinig_expectation_violation,v_glorificaion_feedback,
+  		v_neg_cr,yes_child_independent_clean_up,v_threat_punishment,
+  		p_motivational_arrousal,child_tired,v_material_reward,v_negative_feedback,
+  		unclear_compliance
+        	;
+      	missing are all(99999);
+
+        usevariables =
+  				v_small_mission_steps,
+  				v_positive_feedback,
+  				no_inadequate_boundaries_setting,
+  				legitimazinig_expectation_violation,
+  				indecisive_expectations_setting,
+        ;
+
+          classes = c(3);
+        Analysis:
+          Type=mixture;
+        Plot:
+          type is plot3;
+          series is
+  				v_small_mission_steps,
+  				v_positive_feedback,
+  				no_inadequate_boundaries_setting,
+  				legitimazinig_expectation_violation,
+  				indecisive_expectations_setting,
+        	(*)
+        ;
+
+      Savedata:
+        file is output.txt;
+        save is cprob;
+        format is free;
+      output:
+        tech11 tech14;
+
+
+
+*** WARNING in VARIABLE command
+  Note that only the first 8 characters of variable names are used in the output.
+  Shorten variable names to avoid any confusion.
+*** WARNING in MODEL command
+  All variables are uncorrelated with all other variables within class.
+  Check that this is what is intended.
+*** WARNING in PLOT command
+  Note that only the first 8 characters of variable names are used in plots.
+  If variable names are not unique within the first 8 characters, problems
+  may occur.
+   3 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Mothers -  LCA by specific Behavior
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         101
+
+Number of dependent variables                                    5
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Continuous
+   V_SMALL_MI  V_POSITIVE  NO_INADEQU  LEGITIMAZI  INDECISIVE
+
+Categorical latent variables
+   C
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Random Starts Specifications
+  Number of initial stage random starts                         20
+  Number of final stage optimizations                            4
+  Number of initial stage iterations                            10
+  Initial stage convergence criterion                    0.100D+01
+  Random starts scale                                    0.500D+01
+  Random seed for generating random starts                       0
+
+Input data file(s)
+  Gelem.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+     Number of y missing data patterns           1
+     Number of u missing data patterns           0
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR Y
+
+
+           Covariance Coverage
+              V_SMALL_      V_POSITI      NO_INADE      LEGITIMA      INDECISI
+              ________      ________      ________      ________      ________
+ V_SMALL_       1.000
+ V_POSITI       1.000         1.000
+ NO_INADE       1.000         1.000         1.000
+ LEGITIMA       1.000         1.000         1.000         1.000
+ INDECISI       1.000         1.000         1.000         1.000         1.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     V_SMALL_MISSION       0.194      -0.288       0.018    0.99%       0.133      0.180      0.203
+             101.000       0.005      -0.263       0.345    0.99%       0.214      0.250
+     V_POSITIVE_FEED       0.084       0.264       0.000   11.88%       0.039      0.066      0.082
+             101.000       0.003      -0.396       0.236    0.99%       0.096      0.129
+     NO_INADEQUATE_B       0.054       1.894       0.000    9.90%       0.030      0.042      0.048
+             101.000       0.002       5.551       0.250    0.99%       0.053      0.065
+     LEGITIMAZINIG_E       0.006       2.327       0.000   75.25%       0.000      0.000      0.000
+             101.000       0.000       4.962       0.055    0.99%       0.000      0.010
+     INDECISIVE_EXPE       0.007       3.877       0.000   83.17%       0.000      0.000      0.000
+             101.000       0.000      16.029       0.129    0.99%       0.000      0.000
+
+RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
+
+Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
+
+            1129.322  unperturbed      0
+            1017.334  533738           11
+            1017.334  253358           2
+
+1 perturbed starting value run(s) did not converge.
+
+
+
+     WARNING:  THE BEST LOGLIKELIHOOD VALUE WAS NOT REPLICATED.  THE
+     SOLUTION MAY NOT BE TRUSTWORTHY DUE TO LOCAL MAXIMA.  INCREASE THE
+     NUMBER OF RANDOM STARTS.
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       22
+
+Loglikelihood
+
+          H0 Value                        1129.322
+          H0 Scaling Correction Factor      2.0389
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   -2214.644
+          Bayesian (BIC)                 -2157.111
+          Sample-Size Adjusted BIC       -2226.597
+            (n* = (n + 2) / 24)
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1         38.31052          0.37931
+       2         53.68754          0.53156
+       3          9.00194          0.08913
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1         38.31052          0.37931
+       2         53.68754          0.53156
+       3          9.00194          0.08913
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1               40          0.39604
+       2               52          0.51485
+       3                9          0.08911
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.801
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3
+
+    1   0.858    0.141    0.000
+    2   0.076    0.924    0.000
+    3   0.002    0.000    0.998
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3
+
+    1   0.896    0.104    0.000
+    2   0.105    0.895    0.000
+    3   0.002    0.000    0.998
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3
+
+    1      7.708    5.550    0.000
+    2     11.565   13.704    0.000
+    3     -6.249  -13.814    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Means
+    V_SMALL_MI         0.163      0.017      9.631      0.000
+    V_POSITIVE         0.048      0.009      5.558      0.000
+    NO_INADEQU         0.054      0.007      8.133      0.000
+    LEGITIMAZI         0.007      0.003      2.861      0.004
+    INDECISIVE         0.003      0.002      2.239      0.025
+
+ Variances
+    V_SMALL_MI         0.003      0.001      5.670      0.000
+    V_POSITIVE         0.001      0.000      4.650      0.000
+    NO_INADEQU         0.001      0.000      4.280      0.000
+    LEGITIMAZI         0.000      0.000      3.650      0.000
+    INDECISIVE         0.000      0.000      2.451      0.014
+
+Latent Class 2
+
+ Means
+    V_SMALL_MI         0.232      0.009     26.492      0.000
+    V_POSITIVE         0.121      0.012     10.247      0.000
+    NO_INADEQU         0.038      0.003     13.998      0.000
+    LEGITIMAZI         0.001      0.000      2.020      0.043
+    INDECISIVE         0.001      0.000      1.802      0.072
+
+ Variances
+    V_SMALL_MI         0.003      0.001      5.670      0.000
+    V_POSITIVE         0.001      0.000      4.650      0.000
+    NO_INADEQU         0.001      0.000      4.280      0.000
+    LEGITIMAZI         0.000      0.000      3.650      0.000
+    INDECISIVE         0.000      0.000      2.451      0.014
+
+Latent Class 3
+
+ Means
+    V_SMALL_MI         0.099      0.020      5.048      0.000
+    V_POSITIVE         0.016      0.009      1.816      0.069
+    NO_INADEQU         0.152      0.012     12.183      0.000
+    LEGITIMAZI         0.025      0.006      4.382      0.000
+    INDECISIVE         0.056      0.014      4.021      0.000
+
+ Variances
+    V_SMALL_MI         0.003      0.001      5.670      0.000
+    V_POSITIVE         0.001      0.000      4.650      0.000
+    NO_INADEQU         0.001      0.000      4.280      0.000
+    LEGITIMAZI         0.000      0.000      3.650      0.000
+    INDECISIVE         0.000      0.000      2.451      0.014
+
+Categorical Latent Variables
+
+ Means
+    C#1                1.448      0.450      3.221      0.001
+    C#2                1.786      0.449      3.981      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.134E-07
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 11 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                  20
+        Number of final stage optimizations                     4
+
+
+
+     VUONG-LO-MENDELL-RUBIN LIKELIHOOD RATIO TEST FOR 2 (H0) VERSUS 3 CLASSES
+
+          H0 Loglikelihood Value                         1111.904
+          2 Times the Loglikelihood Difference             34.836
+          Difference in the Number of Parameters                6
+          Mean                                             15.523
+          Standard Deviation                              128.161
+          P-Value                                          0.3700
+
+     LO-MENDELL-RUBIN ADJUSTED LRT TEST
+
+          Value                                            33.622
+          P-Value                                          0.3759
+
+
+TECHNICAL 14 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                  20
+        Number of final stage optimizations                     4
+
+     Random Starts Specification for the k-1 Class Model for Generated Data
+        Number of initial stage random starts                   0
+        Number of final stage optimizations for the
+           initial stage random starts                          0
+     Random Starts Specification for the k Class Model for Generated Data
+        Number of initial stage random starts                  40
+        Number of final stage optimizations                     8
+     Number of bootstrap draws requested                   Varies
+
+
+     PARAMETRIC BOOTSTRAPPED LIKELIHOOD RATIO TEST FOR 2 (H0) VERSUS 3 CLASSES
+
+          H0 Loglikelihood Value                         1111.904
+          2 Times the Loglikelihood Difference             34.836
+          Difference in the Number of Parameters                6
+          Approximate P-Value                              0.0000
+          Successful Bootstrap Draws                           20
+
+     WARNING:  OF THE 20 BOOTSTRAP DRAWS, 19 DRAWS HAD BOTH A SMALLER LRT VALUE THAN THE
+     OBSERVED LRT VALUE AND NOT A REPLICATED BEST LOGLIKELIHOOD VALUE FOR THE 3-CLASS MODEL.
+     THIS MEANS THAT THE P-VALUE MAY NOT BE TRUSTWORTHY DUE TO LOCAL MAXIMA.
+     INCREASE THE NUMBER OF RANDOM STARTS USING THE LRTSTARTS OPTION.
+
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Histograms (sample values)
+  Scatterplots (sample values)
+  Sample means
+  Estimated means, medians, modes, and percentiles
+  Sample and estimated means
+  Observed individual values
+  Estimated means and observed individual values
+  Estimated overall and class-specific distributions
+
+SAVEDATA INFORMATION
+
+
+  Save file
+    output.txt
+
+  Order of variables
+
+    V_SMALL_
+    V_POSITI
+    NO_INADE
+    LEGITIMA
+    INDECISI
+    CPROB1
+    CPROB2
+    CPROB3
+    C
+
+  Save file format           Free
+
+  Save file record length    10000
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for Mixture analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  20:19:28
+        Ending Time:  20:19:37
+       Elapsed Time:  00:00:09
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2017 Muthen & Muthen

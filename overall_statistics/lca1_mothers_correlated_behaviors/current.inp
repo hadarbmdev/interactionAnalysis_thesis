@@ -1,0 +1,56 @@
+
+    Title:
+      Mothers -  LCA by specific Behavior
+    Data:
+      File is Gelem.dat;
+    Variable:
+      Names are
+    subjectCode,child_neutral_affect,cleanup_not_requested,
+		mother_positive_affect,no_child_independent_clean_up,
+		v_direct_concrete_inst,
+		p_touching_toys_for_cleanup,
+		v_small_mission_steps,no_compliance_Passive,
+		p_signal_const,yes_compliance,v_positive_feedback,
+		p_positive_feedback,v_signal_const,v_perspective_mirroring,
+		p_mother_cleanup,v_concern,p_concern_exp,child_positive_affect,
+		v_choice,p_gentle_touch_for_clean_up,v_rational,
+		p_affection_expression,v_motivation_arousal,v_unclear,
+		v_inadequate_perspective_invalidation,v_action_oriented_feedback,
+		v_affection,v_hostility,no_compliance_Defiance,p_modeling,v_modeling,
+		p_forceful_touch_for_cleanup,child_negative_affect,no_compliance_Refusal,
+		child_alert,no_inadequate_boundaries_setting,indecisive_expectations_setting,
+		legitimazinig_expectation_violation,v_glorificaion_feedback,
+		v_neg_cr,yes_child_independent_clean_up,v_threat_punishment,
+		p_motivational_arrousal,child_tired,v_material_reward,v_negative_feedback,
+		unclear_compliance
+      	;
+    	missing are all(99999);
+
+      usevariables =
+				v_small_mission_steps,
+				v_positive_feedback,
+				no_inadequate_boundaries_setting,
+				legitimazinig_expectation_violation,
+				indecisive_expectations_setting,
+      ;
+
+        classes = c(3);
+      Analysis:
+        Type=mixture;
+      Plot:
+        type is plot3;
+        series is
+				v_small_mission_steps,
+				v_positive_feedback,
+				no_inadequate_boundaries_setting,
+				legitimazinig_expectation_violation,
+				indecisive_expectations_setting,
+      	(*)
+      ;
+
+    Savedata:
+      file is output.txt;
+      save is cprob;
+      format is free;
+    output:
+      tech11 tech14;
