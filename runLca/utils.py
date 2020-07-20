@@ -43,22 +43,24 @@ def runMplus(vars):
         text_file.close()
     except Exception as e:
         text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
-        error = text_file.read()
-        n = text_file.write(
-            "failed vars: "+str(vars)+"\n"+error+"\n"+e)
+        text_file.write(
+            "failed vars: "+str(vars)+"\n"+"error:"+"\n"+e)
         text_file.close()
 
 
 def analyzeOutput(iter, offset):
-    tableRow = line_num_for_phrase_in_file()
-    getLatentClassProbs(tableRow+4, iter)
+    tableRow = line_num_for_phrase_in_file(0)
+    tableRow = line_num_for_phrase_in_file(tableRow, "Classes")
+    tableRow = line_num_for_phrase_in_file(tableRow, "1")
+    getLatentClassProbs(tableRow, iter)
 
 
-def line_num_for_phrase_in_file(phrase='BASED ON ESTIMATED POSTERIOR PROBABILITIES', filename='C:\\TEMP\\mplus\\current.out'):
+def line_num_for_phrase_in_file(pos, phrase='BASED ON ESTIMATED POSTERIOR PROBABILITIES', filename='C:\\TEMP\\mplus\\current.out'):
     with open(filename, 'r') as f:
         for (i, line) in enumerate(f):
             if phrase in line:
-                return i
+                if i > pos:
+                    return i
     return -1
 
 
@@ -111,15 +113,17 @@ def keepOutput(maxClassRatio, minClassRatio, iter):
 
 def getClassByLine(rowNumber, all_lines_variable):
     line = all_lines_variable[rowNumber]
-    content_array = line.split('          ')
+    content_array = line.split()
     lineClassObj = parseToClassArr(content_array)
     return lineClassObj
 
 
 def parseToClassArr(arr):
+    print(arr)
     classObj = {}
     classObj['classNum'] = int(arr[0])
     classObj['classRatio'] = float(arr[1])
     prob = (arr[2]).replace('\n', '')
     classObj['classProb'] = float(prob)
+    print(classObj)
     return classObj

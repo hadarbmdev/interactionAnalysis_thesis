@@ -8,9 +8,14 @@ import time
 def main():
     error = ""
     iter = 0
+
+    file = open("C:\\TEMP\\mplus\\errors.txt", "r+")
+    file. truncate(0)
+    file. close()
+
     for i in range(3, 6):
 
-        vars_permutations = rollBehaviors(6)
+        vars_permutations = rollBehaviors(i)
 
         for vars in vars_permutations:
             iter = iter + 1
@@ -23,9 +28,8 @@ def main():
                 print('done iteration '+str(iter))
             except Exception as e:
                 text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
-                error = text_file.read()
-                n = text_file.write(
-                    "failed vars: "+str(vars)+"\n"+error+"\n"+e)
+                text_file.write(
+                    "failed vars: "+str(vars)+"\n"+"error:"+"\n"+e)
                 text_file.close()
 
 
