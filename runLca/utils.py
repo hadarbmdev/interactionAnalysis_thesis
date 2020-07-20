@@ -21,7 +21,8 @@ def prepareInputFile(vars):
     input = ""
     with open(templateFileName, 'r') as f:
         strVars = str(vars)
-        strVars = strVars.replace('(', '').replace(')', '').replace("'", "")
+        strVars = strVars.replace('(', '').replace(
+            ')', '').replace("'", "").replace(",", ",\n")
         input = f.read().replace("[VARS_TEMPLATE]", strVars)
     text_file = open("C:\\TEMP\\mplus\\current.inp", "w")
     n = text_file.write(input)
@@ -48,12 +49,12 @@ def runMplus(vars):
         text_file.close()
 
 
-def analyzeOutput(iter):
+def analyzeOutput(iter, offset):
     tableRow = line_num_for_phrase_in_file()
     getLatentClassProbs(tableRow+4, iter)
 
 
-def line_num_for_phrase_in_file(phrase='BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP', filename='C:\\TEMP\\mplus\\current.out'):
+def line_num_for_phrase_in_file(phrase='BASED ON ESTIMATED POSTERIOR PROBABILITIES', filename='C:\\TEMP\\mplus\\current.out'):
     with open(filename, 'r') as f:
         for (i, line) in enumerate(f):
             if phrase in line:
@@ -87,9 +88,25 @@ def keepOutput(maxClassRatio, minClassRatio, iter):
     # if ((maxClassRatio < 86) or (minClassRatio > 10)):
     if (minClassRatio > 15):
         original = 'C:\\TEMP\\mplus\\current.out'
-        target = 'C:\\TEMP\\mplus\\\savedOutputs\\current'+str(iter)+'.out'
+        target = 'C:\\TEMP\\mplus\\\savedOutputs\\15andup\\current' + \
+            str(iter)+'.out'
         print('current'+str(iter)+'.out was saved')
         shutil.copyfile(original, target)
+    else:
+        if (minClassRatio > 9):
+            original = 'C:\\TEMP\\mplus\\current.out'
+            target = 'C:\\TEMP\\mplus\\\savedOutputs\\9andup\\current' + \
+                str(iter)+'.out'
+            print('current'+str(iter)+'.out was saved')
+            shutil.copyfile(original, target)
+
+        else:
+            if (maxClassRatio < 83):
+                original = 'C:\\TEMP\\mplus\\current.out'
+                target = 'C:\\TEMP\\mplus\\\savedOutputs\\83anddown\\current' + \
+                    str(iter)+'.out'
+                print('current'+str(iter)+'.out was saved')
+                shutil.copyfile(original, target)
 
 
 def getClassByLine(rowNumber, all_lines_variable):
@@ -102,7 +119,7 @@ def getClassByLine(rowNumber, all_lines_variable):
 def parseToClassArr(arr):
     classObj = {}
     classObj['classNum'] = int(arr[0])
-    classObj['classRatio'] = int(arr[1])
+    classObj['classRatio'] = float(arr[1])
     prob = (arr[2]).replace('\n', '')
     classObj['classProb'] = float(prob)
     return classObj

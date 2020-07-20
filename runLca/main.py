@@ -10,7 +10,7 @@ def main():
     iter = 0
     for i in range(3, 6):
 
-        vars_permutations = rollBehaviors(i)
+        vars_permutations = rollBehaviors(6)
 
         for vars in vars_permutations:
             iter = iter + 1
@@ -19,7 +19,7 @@ def main():
             try:
                 prepareInputFile(vars)
                 runMplus(vars)
-                analyzeOutput(iter)
+                analyzeOutput(iter, len(vars*2))
                 print('done iteration '+str(iter))
             except Exception as e:
                 text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
