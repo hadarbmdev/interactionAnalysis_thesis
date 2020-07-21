@@ -15,8 +15,13 @@ behaviors1 = {"child_neutral_affect",
 def rollBehaviors(n):
     return list(itertools.combinations(behaviors, n))
 
+def deleteInputFile(iter):
+    try:
+        os.remove("C:\\TEMP\\mplus\\current"+str(iter)+".inp")
+    except Exception as e:
+        print('failed to delete file '+ str(e))
 
-def prepareInputFile(vars):
+def prepareInputFile(vars, iter):
     templateFileName = "C:\\TEMP\\mplus\\current_template.inp"
     input = ""
     with open(templateFileName, 'r') as f:
@@ -24,27 +29,27 @@ def prepareInputFile(vars):
         strVars = strVars.replace('(', '').replace(
             ')', '').replace("'", "").replace(",", ",\n")
         input = f.read().replace("[VARS_TEMPLATE]", strVars)
-    text_file = open("C:\\TEMP\\mplus\\current.inp", "w")
+    text_file = open("C:\\TEMP\\mplus\\current"+str(iter)+".inp", "w+")
     n = text_file.write(input)
     text_file.close()
 
 
-def runMplus(vars):
+def runMplus(vars, iter):
     FNULL = open(os.devnull, 'w')
-    filename = "C:\\TEMP\\mplus\\current.inp"
+    filename = "C:\\TEMP\\mplus\\current"+str(iter)+".inp"
     fileDir = "C:\\TEMP\\mplus\\"
     args = "C:\\TEMP\\mplus\\Mplus " + filename + " " + fileDir
     # subprocess.call(args, stdout=FNULL, stderr=FNULL, shell=False)
     try:
         stream = os.popen(args)
         output = stream.read()
-        text_file = open("C:\\TEMP\\mplus\\current.out", "w")
+        text_file = open("C:\\TEMP\\mplus\\current"+str(iter)+".out", "w")
         n = text_file.write(output)
         text_file.close()
     except Exception as e:
         text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
         text_file.write(
-            "failed vars: "+str(vars)+"\n"+"error:"+"\n"+e)
+            "failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e))
         text_file.close()
 
 
