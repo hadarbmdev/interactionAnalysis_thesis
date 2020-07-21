@@ -71,7 +71,7 @@ def analyzeOutput(iter, offset):
     getLatentClassProbs(tableRow, iter, filename)
 
 
-def line_num_for_phrase_in_file(pos, phrase='BASED ON ESTIMATED POSTERIOR PROBABILITIES', filename):
+def line_num_for_phrase_in_file(pos, filename, phrase='BASED ON ESTIMATED POSTERIOR PROBABILITIES'):
     with open(filename, 'r') as f:
         for (i, line) in enumerate(f):
             if phrase in line:
