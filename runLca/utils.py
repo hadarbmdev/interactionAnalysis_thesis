@@ -71,7 +71,7 @@ def runMplus(vars, iter):
         try:
             errMsg = "failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e)
             print(errMsg)
-            text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
+            text_file = open("C:\\TEMP\\mplus\\errors.txt", "a")
             text_file.write(errMsg)
             text_file.close()
         finally:
@@ -124,14 +124,14 @@ def keepOutput(maxClassRatio, minClassRatio, iter):
     print('testing if to keep output')
     # if ((maxClassRatio < 86) or (minClassRatio > 10)):
     if (minClassRatio > 15):
-        original = 'C:\\TEMP\\mplus\\current.out'
+        original = 'C:\\TEMP\\mplus\\current'+str(iter)+'.out'
         target = 'C:\\TEMP\\mplus\\\savedOutputs\\15andup\\current' + \
             str(iter)+'.out'
         print('current'+str(iter)+'.out was saved')
         shutil.copyfile(original, target)
     else:
         if (minClassRatio > 9):
-            original = 'C:\\TEMP\\mplus\\current.out'
+            original = 'C:\\TEMP\\mplus\\current'+str(iter)+'.out'
             target = 'C:\\TEMP\\mplus\\\savedOutputs\\9andup\\current' + \
                 str(iter)+'.out'
             print('current'+str(iter)+'.out was saved')
@@ -139,7 +139,7 @@ def keepOutput(maxClassRatio, minClassRatio, iter):
 
         else:
             if (maxClassRatio < 83):
-                original = 'C:\\TEMP\\mplus\\current.out'
+                original = 'C:\\TEMP\\mplus\\current'+str(iter)+'.out'
                 target = 'C:\\TEMP\\mplus\\\savedOutputs\\83anddown\\current' + \
                     str(iter)+'.out'
                 print('current'+str(iter)+'.out was saved')

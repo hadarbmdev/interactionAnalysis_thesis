@@ -52,18 +52,18 @@ def main():
                 #runMplusOnPermutaion(vars, iter)
                 threadLimiter.acquire()
                 try:
-                    t = threading.Thread(target=runMplusOnPermutaion, args=(vars,counter,permCounter,))
+                    #t = threading.Thread(target=runMplusOnPermutaion, args=(vars,counter,permCounter,))
                     
-                    # runMplusOnPermutaion(vars,counter,permCounter)
-                    threads.append(t)
-                    t.start()
+                    runMplusOnPermutaion(vars,counter,permCounter)
+                 #   threads.append(t)
+                  #  t.start()
                 finally:
                     threadLimiter.release()
             logging.debug('Waiting for worker threads')
-            main_thread = threading.currentThread()
-            for t in threading.enumerate():
-                if t is not main_thread:
-                    t.join()
+            # main_thread = threading.currentThread()
+            # for t in threading.enumerate():
+            #     if t is not main_thread:
+            #         t.join()
             logging.debug('Counter: %d', counter.value)
             t6 = dt.now()
             permutationsOfNTook = (t6-t5)/12
@@ -90,7 +90,7 @@ def runMplusOnPermutaion(vars, c, permCounter):
             print("FAILED! failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e))
             lock.acquire()
             try:
-                text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
+                text_file = open("C:\\TEMP\\mplus\\errors.txt", "a")
                 text_file.write(
                     "failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e))
                 text_file.close()
