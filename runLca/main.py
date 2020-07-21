@@ -29,7 +29,7 @@ def main():
         counter = Counter()
         threads = []
         maximumNumberOfThreads = 2
-        print("Number of processors: ", mp.cpu_count())
+        # print("Number of processors: ", mp.cpu_count())
         error = ""
         
 
@@ -53,6 +53,8 @@ def main():
                 threadLimiter.acquire()
                 try:
                     t = threading.Thread(target=runMplusOnPermutaion, args=(vars,counter,permCounter,))
+                    
+                    # runMplusOnPermutaion(vars,counter,permCounter)
                     threads.append(t)
                     t.start()
                 finally:
@@ -85,6 +87,7 @@ def runMplusOnPermutaion(vars, c, permCounter):
             print('done iteration '+str(c.value))
             return
         except Exception as e:
+            print("FAILED! failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e))
             lock.acquire()
             try:
                 text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")

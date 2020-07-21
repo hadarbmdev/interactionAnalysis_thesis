@@ -1,4 +1,4 @@
-import subprocess
+from subprocess import Popen, PIPE, call, check_call
 import os
 import math
 import shutil
@@ -17,9 +17,11 @@ def rollBehaviors(n):
     return list(itertools.combinations(behaviors, n))
 
 def deleteInputAndOutpusFiles(iter):
+    
     try:
         os.remove("C:\\TEMP\\mplus\\current"+str(iter)+".inp")
         os.remove("C:\\TEMP\\mplus\\current"+str(iter)+".out")
+        print('deleted current'+str(iter))
     except Exception as e:
         print('failed to delete file '+ str(e))
 
@@ -40,33 +42,50 @@ def runMplus(vars, iter):
     FNULL = open(os.devnull, 'w')
     filename = "C:\\TEMP\\mplus\\current"+str(iter)+".inp"
     fileDir = "C:\\TEMP\\mplus\\"
-    args = "C:\\TEMP\\mplus\\Mplus " + filename + " " + fileDir
+    
     # subprocess.call(args, stdout=FNULL, stderr=FNULL, shell=False)
     try:
-        # print('STARTING to run mplus of iteration '+str(iter))
-        stream = os.popen(args)
-        output = stream.read()
-        # print('FINISHED to run mplus of iteration '+str(iter))
-        text_file = open("C:\\TEMP\\mplus\\current"+str(iter)+".out", "w")
-        n = text_file.write(output)
-        text_file.close()
+        
+        # outputFile = open("C:\\TEMP\\mplus\\current"+str(iter)+".out", "w")
+        # lock1 = threading.Lock()
+        # lock1.acquire()
+
+        outputFile = "C:\\TEMP\\mplus\\current"+str(iter)+".out"
+
+        args = "C:\\TEMP\\mplus\\Mplus " + filename + " " + fileDir
+        with open(outputFile, 'wb') as filehandle:
+            pipe = Popen(args.split(), stdout=PIPE, stderr=None)
+            filehandle.write(pipe.communicate()[0])
+            filehandle.close()
+        # stream = os.popen(args, stdout=outputFile)
+        #outputFile = open("C:\\TEMP\\mplus\\current"+str(iter)+".out", "wb")
+        # with open(outputFile, 'wb') as filehandle:
+            # pipe = Popen(args.split(), stdout=None, stderr=None)
+            # filehandle.write(pipe.communicate()[0])
+        # output = stream.read()
+        # n = text_file.write(output)
+        # filehandle.close()
     except Exception as e:
         lock = threading.Lock()
         lock.acquire()
         try:
+            errMsg = "failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e)
+            print(errMsg)
             text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
-            text_file.write(
-                "failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e))
+            text_file.write(errMsg)
             text_file.close()
         finally:
             lock.release() # release lock, no matter what
+    # finally: 
+        # lock1.release()
+
 
 
 def analyzeOutput(iter, offset):
-    filename='C:\\TEMP\\mplus\\current'+iter+'.out'
+    filename='C:\\TEMP\\mplus\\current'+str(iter)+'.out'
     tableRow = line_num_for_phrase_in_file(0,filename)
-    tableRow = line_num_for_phrase_in_file(tableRow, "Classes",filename)
-    tableRow = line_num_for_phrase_in_file(tableRow, "1",filename)
+    tableRow = line_num_for_phrase_in_file(tableRow, filename, "Classes")
+    tableRow = line_num_for_phrase_in_file(tableRow, filename,"1")
     
     getLatentClassProbs(tableRow, iter, filename)
 
@@ -102,7 +121,7 @@ def getLatentClassProbs(tableRow, iter, filename):
 
 
 def keepOutput(maxClassRatio, minClassRatio, iter):
-
+    print('testing if to keep output')
     # if ((maxClassRatio < 86) or (minClassRatio > 10)):
     if (minClassRatio > 15):
         original = 'C:\\TEMP\\mplus\\current.out'
