@@ -63,13 +63,15 @@ def runMplus(vars, iter):
 
 
 def analyzeOutput(iter, offset):
-    tableRow = line_num_for_phrase_in_file(0)
-    tableRow = line_num_for_phrase_in_file(tableRow, "Classes")
-    tableRow = line_num_for_phrase_in_file(tableRow, "1")
-    getLatentClassProbs(tableRow, iter)
+    filename='C:\\TEMP\\mplus\\current'+iter+'.out'
+    tableRow = line_num_for_phrase_in_file(0,filename)
+    tableRow = line_num_for_phrase_in_file(tableRow, "Classes",filename)
+    tableRow = line_num_for_phrase_in_file(tableRow, "1",filename)
+    
+    getLatentClassProbs(tableRow, iter, filename)
 
 
-def line_num_for_phrase_in_file(pos, phrase='BASED ON ESTIMATED POSTERIOR PROBABILITIES', filename='C:\\TEMP\\mplus\\current.out'):
+def line_num_for_phrase_in_file(pos, phrase='BASED ON ESTIMATED POSTERIOR PROBABILITIES', filename):
     with open(filename, 'r') as f:
         for (i, line) in enumerate(f):
             if phrase in line:
@@ -78,7 +80,7 @@ def line_num_for_phrase_in_file(pos, phrase='BASED ON ESTIMATED POSTERIOR PROBAB
     return -1
 
 
-def getLatentClassProbs(tableRow, iter, filename='C:\\TEMP\\mplus\\current.out', ):
+def getLatentClassProbs(tableRow, iter, filename):
     with open(filename, 'r') as f:
         all_lines_variable = f.readlines()
         c1 = getClassByLine(tableRow, all_lines_variable)

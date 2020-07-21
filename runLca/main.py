@@ -25,7 +25,7 @@ class Counter(object):
 
 def main():
     if __name__ == '__main__':
-        # freeze_support()
+        freeze_support()
         counter = Counter()
         threads = []
         maximumNumberOfThreads = 2
@@ -45,7 +45,7 @@ def main():
 
         t1 = dt.now()
 
-        for i in range(43 6):
+        for i in range(3, 6):
             vars_permutations = rollBehaviors(i)
             t5 = dt.now()
             for vars in vars_permutations:
