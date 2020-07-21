@@ -3,6 +3,7 @@ import os
 import math
 import shutil
 import itertools
+import threading
 
 
 behaviors = {"child_neutral_affect", "cleanup_not_requested", "mother_positive_affect", "no_child_independent_clean_up", "v_direct_concrete_inst", "p_touching_toys_for_cleanup", "v_small_mission_steps", "no_compliance_Passive", "p_signal_const", "yes_compliance", "v_positive_feedback", "p_positive_feedback", "v_signal_const", "v_perspective_mirroring", "p_mother_cleanup", "v_concern", "p_concern_exp", "child_positive_affect", "v_choice", "p_gentle_touch_for_clean_up", "v_rational", "p_affection_expression", "v_motivation_arousal",
@@ -15,9 +16,10 @@ behaviors1 = {"child_neutral_affect",
 def rollBehaviors(n):
     return list(itertools.combinations(behaviors, n))
 
-def deleteInputFile(iter):
+def deleteInputAndOutpusFiles(iter):
     try:
         os.remove("C:\\TEMP\\mplus\\current"+str(iter)+".inp")
+        os.remove("C:\\TEMP\\mplus\\current"+str(iter)+".out")
     except Exception as e:
         print('failed to delete file '+ str(e))
 
@@ -41,16 +43,23 @@ def runMplus(vars, iter):
     args = "C:\\TEMP\\mplus\\Mplus " + filename + " " + fileDir
     # subprocess.call(args, stdout=FNULL, stderr=FNULL, shell=False)
     try:
+        # print('STARTING to run mplus of iteration '+str(iter))
         stream = os.popen(args)
         output = stream.read()
+        # print('FINISHED to run mplus of iteration '+str(iter))
         text_file = open("C:\\TEMP\\mplus\\current"+str(iter)+".out", "w")
         n = text_file.write(output)
         text_file.close()
     except Exception as e:
-        text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
-        text_file.write(
-            "failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e))
-        text_file.close()
+        lock = threading.Lock()
+        lock.acquire()
+        try:
+            text_file = open("C:\\TEMP\\mplus\\errors.txt", "w")
+            text_file.write(
+                "failed vars: "+str(vars)+"\n"+"error:"+"\n"+str(e))
+            text_file.close()
+        finally:
+            lock.release() # release lock, no matter what
 
 
 def analyzeOutput(iter, offset):
