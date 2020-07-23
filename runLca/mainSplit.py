@@ -15,10 +15,10 @@ import csv
 # REPLACE GELEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 numberOfMachines = 10
-machineNumber = 1
 
 
-def main():
+
+def main(machineNumber):
 
     error = ""
 
@@ -99,4 +99,4 @@ def runMplusOnPermutaion(vars, c):
         print('it took :' + str(took))
 
 
-main()
+main(int(sys.argv[1]))
