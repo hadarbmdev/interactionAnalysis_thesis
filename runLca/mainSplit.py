@@ -40,7 +40,6 @@ def main():
         vars = extractVarsFromPermFile('permFile.txt', i)
         print(vars)
         runMplusOnPermutaion(vars, i)
-        return
 
 
 def writePermsToFile(permFile, perms):
