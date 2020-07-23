@@ -11,10 +11,11 @@ from multiprocessing import Process, freeze_support
 import threading
 import logging
 import linecache
+import csv
 # REPLACE GELEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 numberOfMachines = 10
-machineNumber = 2
+machineNumber = 1
 
 
 def main():
@@ -32,6 +33,11 @@ def main():
     #     #permCounter = permCounter + len(perms)
     #     # writePermsToFile('permFile'+str(i)+'.txt', perms)
     #     writePermsToFile('permFile.txt', perms)
+    with open("C:\\TEMP\\mplus\\mplusFilesLog.csv", "a", newline='') as text_file:
+        writer = csv.writer(text_file)
+        writer.writerow(["iteration", "file name", "vars",
+                         "# vars", "c1", "c2", "c3"])
+    text_file.close()
 
     machineRange = preparePermFileRanges('permFile.txt', machineNumber)
 
