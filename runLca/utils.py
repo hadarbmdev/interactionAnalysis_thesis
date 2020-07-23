@@ -119,9 +119,9 @@ def getLatentClassProbs(tableRow, iter, filename, vars):
         maxClassRatio = max(c3['classRatio'], maxClassRatio)
         minClassRatio = min(c3['classRatio'], minClassRatio)
     if ((c1['classRatio'] != c2['classRatio']) and ((c2['classRatio'] != c3['classRatio']))):
-        keepOutput(maxClassRatio, minClassRatio, iter)
-        logOutput(c1['classRatio'], c2['classRatio'],
-                  c3['classRatio'], filename, iter, vars)
+        if(keepOutput(maxClassRatio, minClassRatio, iter)):
+            logOutput(c1['classRatio'], c2['classRatio'],
+                      c3['classRatio'], filename, iter, vars)
 
 
 def logOutput(c1, c2, c3, filename, iter, vars):
@@ -140,6 +140,7 @@ def keepOutput(maxClassRatio, minClassRatio, iter):
             str(iter)+'.out'
         print('current'+str(iter)+'.out was saved')
         shutil.copyfile(original, target)
+        return True
     else:
         if (minClassRatio > 13):
             original = 'C:\\TEMP\\mplus\\current'+str(iter)+'.out'
@@ -147,7 +148,7 @@ def keepOutput(maxClassRatio, minClassRatio, iter):
                 str(iter)+'.out'
             print('current'+str(iter)+'.out was saved')
             shutil.copyfile(original, target)
-
+            return True
         else:
             if (minClassRatio > 10):
                 original = 'C:\\TEMP\\mplus\\current'+str(iter)+'.out'
@@ -155,6 +156,8 @@ def keepOutput(maxClassRatio, minClassRatio, iter):
                     str(iter)+'.out'
                 print('current'+str(iter)+'.out was saved')
                 shutil.copyfile(original, target)
+                return True
+    return False
 
 
 def getClassByLine(rowNumber, all_lines_variable):
