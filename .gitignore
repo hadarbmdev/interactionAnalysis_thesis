@@ -18,3 +18,6 @@ data.json
 data.csv
 desktop.ini
 example.csv
+*.pyc
+machines_output/*
+runLca/__pycache__/*

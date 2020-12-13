@@ -1,4 +1,4 @@
-from py.runLca.utils import runMplus, analyzeOutput, prepareInputFile, rollBehaviors, deleteInputAndOutpusFiles
+from py.runLca.utils import runMplus, analyzeOutput, prepareInputFileWithName, rollBehaviors, deleteInputAndOutpusFiles, children_behaviors
 import pathlib
 import sys
 import os
@@ -14,8 +14,8 @@ import linecache
 import csv
 # REPLACE GELEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-numberOfMachines = 10
-machineNumber = 10
+numberOfMachines = 1
+machineNumber = 1
 
 
 def main():
@@ -26,26 +26,29 @@ def main():
     file. truncate(0)
     file. close()
 
-    # permCounter = 0
-    # for i in range(3, 6):
-    #     perms = rollBehaviors(i)
+    permCounter = 0
+    for i in range(3, 6):
+        perms = rollBehaviors(i, children_behaviors)
 
-    #     #permCounter = permCounter + len(perms)
-    #     # writePermsToFile('permFile'+str(i)+'.txt', perms)
-    #     writePermsToFile('permFile.txt', perms)
+        #permCounter = permCounter + len(perms)
+        # writePermsToFile('permFile'+str(i)+'.txt', perms)
+        writePermsToFile('permFileChildren.txt', perms)
     with open("C:\\TEMP\\mplus\\mplusFilesLog.csv", "a", newline='') as text_file:
         writer = csv.writer(text_file)
         writer.writerow(["iteration", "file name", "vars",
                          "# vars", "c1", "c2", "c3"])
     text_file.close()
 
-    machineRange = preparePermFileRanges('permFile.txt', machineNumber)
-
+    machineRange = preparePermFileRanges('permFileChildren.txt', machineNumber)
+    sMin = 3
+    sAvg = 5
+    sMax = 9
     t1 = dt.now()
     for i in machineRange:
-        vars = extractVarsFromPermFile('permFile.txt', i)
+        vars = extractVarsFromPermFile('permFileChildren.txt', i)
         print(vars)
-        runMplusOnPermutaion(vars, i)
+
+        runMplusOnPermutaion(vars, i, sMin, sAvg, sMax)
 
 
 def writePermsToFile(permFile, perms):
@@ -77,14 +80,15 @@ def extractVarsFromPermFile(permFile, lineNumber):
     return linecache.getline("C:\\TEMP\\mplus\\perms\\"+permFile, lineNumber)
 
 
-def runMplusOnPermutaion(vars, c):
+def runMplusOnPermutaion(vars, c, sMin, sAvg, sMax):
     t2 = datetime.now()
     print(t2.strftime("%H:%M:%S") + ": "+str(c) +
           '+ :running mplus on vars: '+str(vars))
     try:
-        prepareInputFile(vars, c)
-        runMplus(vars, c)
-        analyzeOutput(c, len(vars*2), vars)
+        prepareInputFileWithName(
+            vars, c, "C:\\TEMP\\mplus\\current_template_children.inp", "_children")
+        runMplus(vars, c, "_children")
+        analyzeOutput(c, len(vars*2), vars, "_children", sMin, sAvg, sMax)
         deleteInputAndOutpusFiles(c)
         print('done iteration '+str(c))
     except Exception as e:
