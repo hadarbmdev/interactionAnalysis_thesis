@@ -18,7 +18,7 @@ numberOfMachines = 10
 machineNumber = 10
 
 
-def main():
+def main(machineNumber):
 
     error = ""
 
@@ -99,4 +99,4 @@ def runMplusOnPermutaion(vars, c):
         print('it took :' + str(took))
 
 
-main()
+main(int(sys.argv[1]))
