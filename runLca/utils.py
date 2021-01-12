@@ -66,6 +66,7 @@ def deleteInputAndOutpusFiles(iter, filePrefix):
 
     try:
         os.remove("C:\\TEMP\\mplus\\current"+filePrefix+str(iter)+".inp")
+        os.remove("C:\\TEMP\\mplus\\current"+filePrefix+str(iter)+".out")
         os.remove("C:\\TEMP\\mplus\\lca1_save_"+str(iter)+".txt")
         os.remove("C:\\TEMP\\mplus\\lca1_save_"+str(iter)+".csv")
         os.remove("C:\\TEMP\\mplus\\lca1_save_"+str(iter)+".txt_copy")
@@ -204,14 +205,42 @@ def runMplus(vars, iter, filePrefix):
         # lock1.release()
 
 
-def analyzeOutput(iter, offset, vars, filePrefix, sMin, sAvg, sMax):
+def analyzeOutput(iter, offset, vars, filePrefix, sMin, sAvg, sMax, splitVars):
     filename = 'C:\\TEMP\\mplus\\current'+filePrefix+str(iter)+'.out'
     tableRow = line_num_for_phrase_in_file(0, filename)
     tableRow = line_num_for_phrase_in_file(tableRow, filename, "Classes")
     tableRow = line_num_for_phrase_in_file(tableRow, filename, "1")
 
     getLatentClassProbs(tableRow, iter, filename, vars,
-                        filePrefix, sMin, sAvg, sMax)
+                        filePrefix, sMin, sAvg, sMax, splitVars)
+
+
+def getEachVarMeanPerGroup(iter, vars, filePrefix, splitVars):
+    outputFile = "C:\\TEMP\\mplus\\current"+filePrefix+str(iter)+".out"
+    tableRow = line_num_for_phrase_in_file(0, outputFile, "MODEL RESULTS")
+
+    means = {"v1Mean": {}, "v2Mean": {}, "v3Mean": {}}
+    with open(outputFile, 'r') as f:
+        all_lines_variable = f.readlines()
+
+        # go to C1 means of all vars.
+        tableRow = line_num_for_phrase_in_file(line_num_for_phrase_in_file(
+            0, outputFile, "Latent Class 1"), outputFile, "Means")
+        tableRow = tableRow + 1
+        means["v1Mean"] = getMeansByLine(tableRow, all_lines_variable)
+
+        # go to C2 means of all vars.
+        tableRow = line_num_for_phrase_in_file(line_num_for_phrase_in_file(
+            0, outputFile, "Latent Class 2"), outputFile, "Means")
+        tableRow = tableRow + 1
+        means["v2Mean"] = getMeansByLine(tableRow, all_lines_variable)
+
+        # go to C3 means of all vars.
+        tableRow = line_num_for_phrase_in_file(line_num_for_phrase_in_file(
+            0, outputFile, "Latent Class 3"), outputFile, "Means")
+        tableRow = tableRow + 1
+        means["v3Mean"] = getMeansByLine(tableRow, all_lines_variable)
+    return means
 
 
 def analyzeOutputToGetMothersOfEachSubjectLCAGroup(iter, offset, vars, filePrefix, splitVars):
@@ -236,7 +265,6 @@ def copySubjectsLCAtoCSV(dst, iter, resultsFileName, vars, filePrefix):
     dfResults = pd.read_csv(resultsFileName)
     # print(dfResults)
     newColName = vars.replace(",", "_")
-
     subjectsWithDataIndex = 0
 
     newResultsCol = []
@@ -273,9 +301,14 @@ def copySubjectsLCAtoCSV(dst, iter, resultsFileName, vars, filePrefix):
     # print("newResultsCol " + str(newResultsCol) +
         #   " length: "+str(len(newResultsCol)))
     dfResults[newColName] = newResultsCol
+    dfResults = addMeansResultsOfCurrentVarsForThisSubject(dfResults, vars)
     # print(dfResults)
     dfResults.to_csv(resultsFileName, index=False)
     return 1
+
+
+def addMeansResultsOfCurrentVarsForThisSubject(dfResults, vars):
+    amountOfVars = len(vars.split(","))
 
 
 def convertOutputResultsFileToCsv(filename, dst, noOfVars):
@@ -312,7 +345,7 @@ def line_num_for_phrase_in_file(pos, filename, phrase='BASED ON THEIR MOST LIKEL
     return -1
 
 
-def getLatentClassProbs(tableRow, iter, filename, vars, filePrefix, sMin, sAvg, sMax):
+def getLatentClassProbs(tableRow, iter, filename, vars, filePrefix, sMin, sAvg, sMax, splitVars):
 
     with open(filename, 'r') as f:
         all_lines_variable = f.readlines()
@@ -334,14 +367,19 @@ def getLatentClassProbs(tableRow, iter, filename, vars, filePrefix, sMin, sAvg, 
         print('minClassRatio '+str(minClassRatio))
     if ((c1['classRatio'] != c2['classRatio']) and ((c2['classRatio'] != c3['classRatio']))):
         if(keepOutput(maxClassRatio, minClassRatio, iter, filePrefix, sMin, sAvg, sMax)):
+            varMeansPerGroup = getEachVarMeanPerGroup(
+                iter, vars, filePrefix, splitVars)
             logOutput(c1['classRatio'], c2['classRatio'],
-                      c3['classRatio'], filename, iter, vars, filePrefix)
+                      c3['classRatio'], filename, iter, vars, varMeansPerGroup, filePrefix)
+
+            return varMeansPerGroup
 
 
-def logOutput(c1, c2, c3, filename, iter, vars, filePrefix):
+def logOutput(c1, c2, c3, filename, iter, vars, varMeansPerGroup, filePrefix):
     with open("C:\\TEMP\\mplus\\mplusFilesLog"+filePrefix+".csv", "a", newline='') as text_file:
         writer = csv.writer(text_file)
-        writer.writerow([iter, filename, str(vars), len(vars), c1, c2, c3])
+        writer.writerow([iter, filename, str(vars), len(
+            vars), c1, c2, c3, str(varMeansPerGroup)])
     text_file.close()
 
 
@@ -360,6 +398,7 @@ def keepOutput(maxClassRatio, minClassRatio, iter, filePrefix, sMin, sAvg, sMax)
             str(iter)+'.out'
         print('current'+filePrefix+str(iter)+'.out was saved')
         shutil.copyfile(original, target)
+        print('YES, KEEP')
         return True
     else:
         if (minClassRatio > sAvg):
@@ -368,6 +407,7 @@ def keepOutput(maxClassRatio, minClassRatio, iter, filePrefix, sMin, sAvg, sMax)
                 str(iter)+'.out'
             print('current'+str(iter)+'.out was saved')
             shutil.copyfile(original, target)
+            print('YES, KEEP')
             return True
         else:
             if (minClassRatio > sMin):
@@ -377,7 +417,9 @@ def keepOutput(maxClassRatio, minClassRatio, iter, filePrefix, sMin, sAvg, sMax)
                     str(iter)+'.out'
                 print('current'+str(iter)+'.out was saved')
                 shutil.copyfile(original, target)
+                print('YES, KEEP')
                 return True
+    print('NO, DISCARD')
     return False
 
 
@@ -396,4 +438,23 @@ def parseToClassArr(arr):
     prob = (arr[2]).replace('\n', '')
     classObj['classProb'] = float(prob)
     print(classObj)
+    return classObj
+
+
+def getMeansByLine(rowNumber, all_lines_variable):
+    allVarsMeansArr = []
+    for i in range(3):
+        line = all_lines_variable[rowNumber+i]
+        content_array = line.split()
+        lineClassObj = parseToMeanArr(content_array)
+        allVarsMeansArr.append(lineClassObj)
+    # print("allVarsMeansArr " + str(allVarsMeansArr))
+    return allVarsMeansArr
+
+
+def parseToMeanArr(arr):
+    print(arr)
+    classObj = {}
+    classObj[arr[0]] = float(arr[1])
+    # print("parseToMeanArr: " + str(classObj))
     return classObj

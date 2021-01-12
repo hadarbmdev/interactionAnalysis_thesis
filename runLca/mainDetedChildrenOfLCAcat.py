@@ -42,6 +42,7 @@ def main():
         if (NoEmptyObservations(gelem, splitVars)):
             runMplusOnPermutaion(
                 lcaVars, row['iteration'], filePrefix, splitVars)
+            break
 
     # with open("C:\\TEMP\\mplus\\motherLCAfilteredMinGroup15andUp.csv", "r", newline='') as text_file:
     #     writer = csv.writer(text_file)
